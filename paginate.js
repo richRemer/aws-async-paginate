@@ -6,17 +6,17 @@
  * @yields {object}
  */
 async function* paginate(fn, key, params={}) {
-    let paging = {};
+  let paging = {};
 
-    do {
-        const opts = {...params, ...paging};
-        const page = await fn(opts).promise();
-        const {[key]: results} = page;
+  do {
+    const opts = {...params, ...paging};
+    const page = await fn(opts).promise();
+    const {[key]: results} = page;
 
-        yield* results;
+    yield* results;
 
-        paging = next(page);
-    } while (paging);
+    paging = next(page);
+  } while (paging);
 }
 
 module.exports = paginate;
@@ -27,10 +27,10 @@ module.exports = paginate;
  * @returns {object}
  */
 function next(page) {
-    const keys = Object.keys(page).filter(key => /^Next[A-Z]/.test(key));
+  const keys = Object.keys(page).filter(key => /^Next[A-Z]/.test(key));
 
-    return keys.reduce((opts, key) => {
-        const startKey = key.replace("Next", "Start");
-        return {...(opts||{}), ...{[startKey]: page[key]}};
-    }, undefined);
+  return keys.reduce((opts, key) => {
+    const startKey = key.replace("Next", "Start");
+    return {...(opts||{}), ...{[startKey]: page[key]}};
+  }, undefined);
 }
